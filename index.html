@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot IA</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f5f5f5;
+        }
+        #chatbox {
+            width: 350px;
+            height: 500px;
+            border: 2px solid #007bff;
+            border-radius: 10px;
+            overflow-y: auto;
+            background-color: white;
+            padding: 10px;
+        }
+        #chatbox p {
+            margin: 5px 0;
+        }
+        #input-container {
+            display: flex;
+            margin-top: 10px;
+        }
+        #message {
+            flex-grow: 1;
+            padding: 5px;
+        }
+        #send {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        #voice {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            margin-left: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div>
+        <div id="chatbox">
+            <p><b>Bot :</b> Bonjour ! Pose-moi une question. 😊</p>
+        </div>
+        <div id="input-container">
+            <input type="text" id="message" placeholder="Écrivez un message...">
+            <button id="send">Envoyer</button>
+            <button id="voice">🎤</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const chatContainer = document.getElementById("chatbox");
+            const userInput = document.getElementById("message");
+            const sendButton = document.getElementById("send");
+            const voiceButton = document.getElementById("voice");
+
+            const responses = {
+                "bonjour": "Bonjour ! Comment puis-je vous aider ? 😊",
+                "salut": "Salut ! Que puis-je faire pour toi ?",
+                "ça va": "Je suis un bot, donc je vais toujours bien !",
+                "comment tu t'appelles": "Je suis un chatbot intelligent !",
+                "quel est ton rôle": "Mon rôle est de répondre à tes questions.",
+                "quelle est la capitale de la france": "Paris.",
+                "quelle est la capitale de l'espagne": "Madrid.",
+                "quelle est la capitale de l'italie": "Rome.",
+                "quelle est la capitale de l'allemagne": "Berlin.",
+                "qui a inventé internet": "ARPANET est considéré comme le précurseur d'Internet.",
+                "quel est le plus grand pays du monde": "La Russie.",
+                "combien de continents y a-t-il": "7 : Afrique, Amérique du Nord, Amérique du Sud, Antarctique, Asie, Europe et Océanie.",
+                "quelle est la planète la plus proche du soleil": "Mercure.",
+                "quel est l'animal terrestre le plus rapide": "Le guépard (120 km/h).",
+                "qui a écrit harry potter": "J.K. Rowling.",
+                "quelle est la monnaie du japon": "Le yen (¥).",
+                "quel est le plus haut sommet du monde": "L'Everest (8 849m).",
+                "quel est le plus grand désert du monde": "L'Antarctique, suivi du Sahara.",
+                "quel est le fleuve le plus long du monde": "Le Nil (6 650 km).",
+                "qui a inventé l'électricité": "Benjamin Franklin a contribué à son étude.",
+                "quel est le sport le plus pratiqué au monde": "Le football.",
+                "quel est le plus gros animal du monde": "La baleine bleue.",
+                "quel est le pays le plus peuplé": "La Chine, suivie de l'Inde.",
+                "qui a peint la joconde": "Léonard de Vinci.",
+                "quel est le métal le plus précieux": "Le rhodium.",
+                "quel est l'élément chimique le plus léger": "L'hydrogène.",
+                "quel est le plus grand lac du monde": "La mer Caspienne.",
+                "quel est le record du 100m sprint": "9,58 secondes par Usain Bolt.",
+                "qui a écrit roméo et juliette": "William Shakespeare.",
+                "combien de cœurs a une pieuvre": "3 cœurs.",
+                "quelle est la température du soleil": "Environ 5 500°C.",
+                "quel est le plus petit pays du monde": "Le Vatican.",
+                "quelle est la langue la plus parlée au monde": "L'anglais.",
+                "quel est le plus grand animal terrestre": "L'éléphant d'Afrique.",
+                "qui a découvert l'amérique": "Christophe Colomb en 1492.",
+                "quelle est la plus grande île du monde": "Le Groenland.",
+                "combien de pattes a une araignée": "8 pattes.",
+                "quelle est la capitale du brésil": "Brasília.",
+                "quel est l'élément chimique le plus abondant dans l'univers": "L'hydrogène.",
+                "quel est le deuxième plus grand pays du monde": "Le Canada.",
+                "quel est le plus long mur du monde": "La Grande Muraille de Chine.",
+                "quelle est la ville la plus peuplée du monde": "Tokyo.",
+                "quel est le plus grand océan du monde": "L'océan Pacifique.",
+                "qui a inventé l'avion": "Les frères Wright.",
+                "quel est le plus grand oiseau du monde": "L'autruche.",
+                "quel est l'animal marin le plus rapide": "Le voilier (110 km/h).",
+                "quel est l'organe le plus grand du corps humain": "La peau.",
+                "quel est l'animal qui dort le plus": "Le koala (jusqu'à 22h/jour).",
+                "quel est le plus grand arbre du monde": "Le séquoia géant.",
+                "qui a inventé le téléphone": "Alexander Graham Bell.",
+                "quel est le record du marathon": "2h 00m 35s (Eliud Kipchoge).",
+                "quel est le plus grand reptile du monde": "Le crocodile marin.",
+                "quel est le métal le plus utilisé dans l'industrie": "Le fer.",
+                "qui a écrit 'Les Misérables'": "Victor Hugo.",
+                "quelle est la distance entre la Terre et la Lune": "Environ 384 400 km.",
+                "quel est le plus grand stade du monde": "Le Rungrado May Day en Corée du Nord.",
+                "qui a peint 'La Nuit étoilée'": "Vincent van Gogh.",
+                "quel est le plus grand mammifère terrestre": "L'éléphant d'Afrique.",
+                "quel est le plus grand mammifère marin": "La baleine bleue.",
+                "quel est le plus grand insecte": "Le phasme géant.",
+                "quel est le plus grand amphibien": "La salamandre géante de Chine.",
+                "quel est l'océan le plus profond": "Le Pacifique (Fosse des Mariannes)."
+            };
+
+            sendButton.addEventListener("click", sendMessage);
+            userInput.addEventListener("keypress", function(event) {
+                if (event.key === "Enter") sendMessage();
+            });
+            voiceButton.addEventListener("click", startVoiceRecognition);
+
+            function displayMessage(sender, message) {
+                const messageElement = document.createElement("p");
+                messageElement.innerHTML = `<b>${sender}:</b> ${message}`;
+                chatContainer.appendChild(messageElement);
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }
+
+            function sendMessage() {
+                const userMessage = userInput.value.trim().toLowerCase();
+                if (userMessage === "") return;
+
+                displayMessage("User", userMessage);
+                userInput.value = "";
+
+                let botResponse = findBestMatch(userMessage, responses) || "Je ne comprends pas. Pouvez-vous reformuler ?";
+                displayMessage("Bot", botResponse);
+                speak(botResponse);
+            }
+
+            function startVoiceRecognition() {
+                const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+                recognition.lang = 'fr-FR';
+                recognition.start();
+
+                recognition.onresult = function(event) {
+                    const userMessage = event.results[0][0].transcript.toLowerCase();
+                    displayMessage("User", userMessage);
+
+                    let botResponse = findBestMatch(userMessage, responses) || "Je ne comprends pas. Pouvez-vous reformuler ?";
+                    displayMessage("Bot", botResponse);
+                    speak(botResponse);
+                };
+            }
+
+            function speak(text) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'fr-FR';
+                window.speechSynthesis.speak(utterance);
+            }
+
+            function levenshteinDistance(s1, s2) {
+                let m = s1.length, n = s2.length;
+                let dp = Array(m + 1).fill(null).map(() => Array(n + 1).fill(0));
+
+                for (let i = 0; i <= m; i++) dp[i][0] = i;
+                for (let j = 0; j <= n; j++) dp[0][j] = j;
+
+                for (let i = 1; i <= m; i++) {
+                    for (let j = 1; j <= n; j++) {
+                        let cost = s1[i - 1] === s2[j - 1] ? 0 : 1;
+                        dp[i][j] = Math.min(dp[i - 1][j] + 1, dp[i][j - 1] + 1, dp[i - 1][j - 1] + cost);
+                    }
+                }
+                return dp[m][n];
+            }
+
+            function findBestMatch(input, dataset) {
+                let closestMatch = null;
+                let smallestDistance = Infinity;
+
+                for (let key in dataset) {
+                    let distance = levenshteinDistance(input, key);
+                    if (distance < smallestDistance) {
+                        smallestDistance = distance;
+                        closestMatch = key;
+                    }
+                }
+
+                return closestMatch ? dataset[closestMatch] : null;
+            }
+        });
+    </script>
+
+</body>
+</html>
